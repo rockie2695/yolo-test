@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 
 # Load a model
-model = YOLO("yolo11n.pt")  # pretrained YOLO11n model
+model = YOLO("yolo11m.pt")  # pretrained YOLO11n model
 
 # Run batched inference on a list of images
 results = model(["image1.jpg", "image2.jpg"])  # return a list of Results objects
@@ -23,20 +23,54 @@ for idx, result in enumerate(results):
     print(boxes, masks, keypoints, probs, obb)
 
     result.show()  # display to screen
-    result.save(filename=f"results{idx}.jpg")  # save to disk
+    result.save(filename=f"results{idx}.jpg", conf=True)  # save to disk
+    result.save_txt(f"results{idx}.txt", save_conf=True)  # save labels as .txt
+    json_result = result.to_json(normalize=False, decimals=5)
+    print(json_result)
 
-# test 2
-results2 = model("https://youtu.be/nZF0poe3Pus", stream=True)
+# # test 2
+# results2 = model("https://youtu.be/nZF0poe3Pus", stream=True)
 
-# Process results generator
-for idx, result in enumerate(results2):
-    boxes = result.boxes  # Boxes object for bounding box outputs
-    masks = result.masks  # Masks object for segmentation masks outputs
-    keypoints = result.keypoints  # Keypoints object for pose outputs
-    probs = result.probs  # Probs object for classification outputs
-    obb = result.obb  # Oriented boxes object for OBB outputs
-    print(boxes, masks, keypoints, probs, obb)
+# # Process results generator
+# for idx, result in enumerate(results2):
+#     boxes = result.boxes  # Boxes object for bounding box outputs
+#     masks = result.masks  # Masks object for segmentation masks outputs
+#     keypoints = result.keypoints  # Keypoints object for pose outputs
+#     probs = result.probs  # Probs object for classification outputs
+#     obb = result.obb  # Oriented boxes object for OBB outputs
+#     print(boxes, masks, keypoints, probs, obb)
 
-    result.show()  # display to screen
-    result.save(filename=f"video_results/results{idx}.jpg")
-    result.save_crop(save_dir="video_results", file_name=f"results{idx}.jpg")
+#     result.show()  # display to screen
+#     result.save(filename=f"video_results/results{idx}.jpg")
+#     result.save_crop(save_dir="video_results", file_name=f"results{idx}.jpg")
+
+# test 3
+# Open the video file
+video_path = "test_1080_1920_30fps.mp4"
+cap = cv2.VideoCapture(video_path)
+
+# Loop through the video frames
+while cap.isOpened():
+    # Read a frame from the video
+    success, frame = cap.read()
+
+    if success:
+        # Run YOLO inference on the frame
+        results = model(frame)
+
+        # Visualize the results on the frame
+        annotated_frame = results[0].plot()
+
+        # Display the annotated frame
+        cv2.imshow("YOLO Inference", annotated_frame)
+
+        # Break the loop if 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    else:
+        # Break the loop if the end of the video is reached
+        break
+
+# Release the video capture object and close the display window
+cap.release()
+cv2.destroyAllWindows()
