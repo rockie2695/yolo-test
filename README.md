@@ -8,4 +8,7 @@ python -m venv --upgrade venv
 
 pip install -r requirements.txt
 
-python main.py
+## run
+python detect.py
+
+python segment.py
