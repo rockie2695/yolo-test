@@ -6,7 +6,7 @@ model = YOLO("models/yolo11m.pt")  # pretrained YOLO11n model
 
 # Run batched inference on a list of images
 results = model(
-    ["files/image1.jpg", "files/image2.jpg"]
+    ["files/image1.jpg", "files/image2.jpg", "files/image3.jpg"]
 )  # return a list of Results objects
 # results = model(["image1.jpg", "image2.jpg"], stream=True)  # return a generator of Results objects
 # results=model("screen") # for screen capture
@@ -17,12 +17,11 @@ results = model(
 # model.predict("bus.jpg", save=True, imgsz=320, conf=0.5) #there is more config
 # Process results list
 for idx, result in enumerate(results):
-    boxes = result.boxes  # Boxes object for bounding box outputs
-    masks = result.masks  # Masks object for segmentation masks outputs
-    keypoints = result.keypoints  # Keypoints object for pose outputs
-    probs = result.probs  # Probs object for classification outputs
-    obb = result.obb  # Oriented boxes object for OBB outputs
-    print(boxes, masks, keypoints, probs, obb)
+    boxes = result.boxes  # Boxes object for bounding box outputs 
+    print(
+        "boxes",
+        boxes,
+    )
 
     result.show()  # display to screen
     result.save(filename=f"files/results{idx}.jpg", conf=True)  # save to disk

@@ -1,0 +1,5 @@
+0.28 ping-pong_ball
+0.19 Chihuahua
+0.07 dishwasher
+0.06 basenji
+0.03 tennis_ball

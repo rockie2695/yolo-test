@@ -1,0 +1,5 @@
+0.62 police_van
+0.31 minibus
+0.02 trolleybus
+0.01 amphibian
+0.01 minivan
