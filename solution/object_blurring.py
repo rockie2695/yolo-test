@@ -7,7 +7,6 @@ model = YOLO("../models/yolo11m.pt")
 names = model.names
 keys = list(names.keys())
 values = list(names.values())
-print(keys[values.index("person")])  # 0
 
 cap = cv2.VideoCapture("../files/airport_conveyor_belt.mp4")
 assert cap.isOpened(), "Error reading video file"
@@ -34,12 +33,13 @@ while cap.isOpened():
 
     results = model.predict(im0, show=False)
     boxes = results[0].boxes.xyxy.cpu().tolist()
-    # boxes = results.boxes.xyxy[results.boxes.cls == person_class_id].cpu().tolist()  # Filter detections to only 'person'
     clss = results[0].boxes.cls.cpu().tolist()
     annotator = Annotator(im0, line_width=2, example=names)
 
     if boxes is not None:
         for box, cls in zip(boxes, clss):
+            if int(cls) != 28:  # filter the result to only suitcase
+                continue
             annotator.box_label(
                 box, color=colors(int(cls), True), label=names[int(cls)]
             )
