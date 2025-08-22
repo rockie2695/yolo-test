@@ -12,3 +12,11 @@ pip install -r requirements.txt
 python detect.py
 
 python segment.py
+
+python classify.py
+
+python detect.py
+
+python obb.py
+
+python pose.py
